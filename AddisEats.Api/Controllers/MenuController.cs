@@ -3,11 +3,12 @@ using AddisEats.Api.Options;
 using AddisEats.Api.Services.MenuServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using AddisEats.Api.Dtos;
 
 namespace AddisEats.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/menu")]
+[Route("api/v1/menu-items")]
 public class MenuController : ControllerBase
 {
     private readonly IMenuService _menuService;
@@ -37,7 +38,12 @@ public class MenuController : ControllerBase
     {
         var item = _menuService.GetById(id);
 
-        return item == null ? NotFound() : Ok(item);
+        return item == null 
+            ? NotFound(new ApiError(
+                "MENU_ITEM_NOT_FOUND",
+                $"Menu item with ID {id} was not found."
+            ))
+            : Ok(item);
     }
 
     [HttpPost]
@@ -45,7 +51,10 @@ public class MenuController : ControllerBase
     {
         if (request.PriceETB <= 0)
         {
-            return BadRequest("Price must be greater than zero.");
+            return BadRequest(new ApiError(
+                "INVALID_PRICE",
+                "Menu item price must be greater than zero."
+            ));
         }
 
         var item = _menuService.Add(request);

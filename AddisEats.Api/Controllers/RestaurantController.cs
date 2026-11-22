@@ -3,6 +3,7 @@ using AddisEats.Api.Services.MenuServices;
 using AddisEats.Api.Services.RestaurantServices;
 using Microsoft.AspNetCore.Mvc;
 using AddisEats.Api.Models;
+using AddisEats.Api.Dtos;
 
 namespace AddisEats.Api.Controllers;
 
@@ -28,6 +29,10 @@ public class RestaurantController : ControllerBase
         if (query.Page < 1 || query.Limit < 1)
             return BadRequest("Page and limit must be greater than zero.");
 
+        if (query.Limit > RestaurantQuery.MaxLimit)
+        {
+            query.Limit = RestaurantQuery.MaxLimit;
+        }
         var restaurants = _restaurantService.Search(query);
 
         var data = restaurants
@@ -51,7 +56,10 @@ public class RestaurantController : ControllerBase
         var restaurant = _restaurantService.GetById(id);
 
         if (restaurant is null)
-            return NotFound();
+            return NotFound(new ApiError(
+                "RESTAURANT_NOT_FOUND",
+                $"Restaurant with ID {id} was not found."
+            ));
 
         return Ok(restaurant.ToDto());
     }
@@ -64,7 +72,10 @@ public class RestaurantController : ControllerBase
         var restaurant = _restaurantService.GetById(id);
 
         if (restaurant is null)
-            return NotFound();
+            return NotFound(new ApiError(
+                "RESTAURANT_NOT_FOUND",
+                $"Restaurant with ID {id} was not found."
+            ));
 
         var menu = _menuService.GetForRestaurant(id, category);
 

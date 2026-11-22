@@ -7,4 +7,5 @@ public class RestaurantQuery
     public decimal? MaxFeeEtb { get; set; }
     public int Page { get; set; } = 1;
     public int Limit { get; set; } = 20;
+    public const int MaxLimit = 100;
 }

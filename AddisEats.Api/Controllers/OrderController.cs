@@ -21,7 +21,10 @@ public class OrdersController : ControllerBase
     {
         var order = _orderService.GetById(id);
         if (order is null)
-            return NotFound();
+            return NotFound(new ApiError(
+                "ORDER_NOT_FOUND",
+                $"Order with ID {id} was not found."
+            ));
 
         return order.ToDto();
     }
@@ -46,7 +49,10 @@ public class OrdersController : ControllerBase
         var order = _orderService.UpdateStatus(id, request.Status);
 
         if (order is null)
-            return NotFound();
+            return NotFound(new ApiError(
+                "ORDER_NOT_FOUND",
+                $"Order with ID {id} was not found."
+            ));
 
         return order.ToDto();
     }
