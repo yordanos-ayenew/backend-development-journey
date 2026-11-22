@@ -1,5 +1,6 @@
 using AddisEats.Api.Options;
-using AddisEats.Api.Services;
+using AddisEats.Api.Services.MenuServices;
+using AddisEats.Api.Services.RestaurantServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.Configure<MenuOptions>(
+    builder.Configuration.GetSection("Menu"));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -23,6 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("frontend");
 
 app.MapControllers();
 
