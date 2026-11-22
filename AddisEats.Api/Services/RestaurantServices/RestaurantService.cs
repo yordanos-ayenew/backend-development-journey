@@ -1,24 +1,19 @@
 using AddisEats.Api.Data;
 using AddisEats.Api.Models;
+using AddisEats.Api.Dtos;
 
 namespace AddisEats.Api.Services.RestaurantServices;
 
 public class RestaurantService : IRestaurantService
 {
-    public IReadOnlyList<Restaurant> Search(string? area, int page, int limit)
+    public IReadOnlyList<Restaurant> Search(RestaurantQuery query)
     {
-        var query = RestaurantData.Items
-            .Where(r => r.IsActive);
+        var restaurants = ApplyFilters(query);
 
-        if (!string.IsNullOrWhiteSpace(area))
-        {
-            query = query.Where(r =>
-                r.Area.Equals(area, StringComparison.OrdinalIgnoreCase));
-        }
-        return query
+        return restaurants
             .OrderBy(r => r.Name)
-            .Skip((page - 1) * limit)
-            .Take(limit)
+            .Skip((query.Page - 1) * query.Limit)
+            .Take(query.Limit)
             .ToList();
     }
 
@@ -28,16 +23,32 @@ public class RestaurantService : IRestaurantService
             .FirstOrDefault(r => r.Id == id && r.IsActive);
     }
 
-    public int CountAll(string? area)
+    public int CountAll(RestaurantQuery query)
     {
-        var query = RestaurantData.Items
+        return ApplyFilters(query).Count();
+    }
+
+    private static IEnumerable<Restaurant> ApplyFilters(RestaurantQuery query)
+    {
+        var restaurants = RestaurantData.Items
             .Where(r => r.IsActive);
 
-        if (!string.IsNullOrWhiteSpace(area))
+        if (!string.IsNullOrWhiteSpace(query.Area))
         {
-            query = query.Where(r =>
-                r.Area.Equals(area, StringComparison.OrdinalIgnoreCase));
+            restaurants = restaurants.Where(r =>
+                r.Area.Equals(query.Area, StringComparison.OrdinalIgnoreCase));
         }
-        return query.Count();
+        if (query.Areas.Count > 0)
+        {
+            restaurants = restaurants.Where(r =>
+                query.Areas.Contains(r.Area, StringComparer.OrdinalIgnoreCase));
+        }
+        if (query.MaxFeeEtb.HasValue)
+        {
+            restaurants = restaurants.Where(r =>
+                r.DeliveryFeeEtb <= query.MaxFeeEtb.Value);
+        }
+
+        return restaurants;
     }
 }

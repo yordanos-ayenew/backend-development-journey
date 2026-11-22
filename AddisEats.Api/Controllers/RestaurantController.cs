@@ -2,6 +2,7 @@ using AddisEats.Api.Dtos;
 using AddisEats.Api.Services.MenuServices;
 using AddisEats.Api.Services.RestaurantServices;
 using Microsoft.AspNetCore.Mvc;
+using AddisEats.Api.Models;
 
 namespace AddisEats.Api.Controllers;
 
@@ -21,29 +22,30 @@ public class RestaurantController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll(
-        [FromQuery] string? area,
-        [FromQuery] int page = 1,
-        [FromQuery] int limit = 20)
+    public ActionResult<PagedResult<RestaurantDto>> GetAll(
+    [FromQuery] RestaurantQuery query)
     {
-        if (page < 1 || limit < 1)
+        if (query.Page < 1 || query.Limit < 1)
             return BadRequest("Page and limit must be greater than zero.");
 
-        var restaurants = _restaurantService.Search(area, page, limit);
+        var restaurants = _restaurantService.Search(query);
 
         var data = restaurants
             .Select(r => r.ToDto())
             .ToList();
 
+        var total = _restaurantService.CountAll(query);
+
         return Ok(new
         {
             data,
-            page,
-            pageSize = limit
+            query.Page,
+            query.Limit,
+            total
         });
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
     {
         var restaurant = _restaurantService.GetById(id);
@@ -54,7 +56,7 @@ public class RestaurantController : ControllerBase
         return Ok(restaurant.ToDto());
     }
 
-    [HttpGet("{id}/menu")]
+    [HttpGet("{id:int}/menu")]
     public IActionResult GetMenu(
         int id,
         [FromQuery] string? category)

@@ -32,7 +32,7 @@ public class MenuController : ControllerBase
         return Ok(menu);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
     {
         var item = _menuService.GetById(id);

@@ -1,10 +1,11 @@
 using AddisEats.Api.Models;
+using AddisEats.Api.Dtos;
 
 namespace AddisEats.Api.Services.RestaurantServices;
 
 public interface IRestaurantService
 {
-    IReadOnlyList<Restaurant> Search(string? area, int page, int limit);
+    IReadOnlyList<Restaurant> Search(RestaurantQuery query);
     Restaurant? GetById(int id);
-    int CountAll(string? area);
+    int CountAll(RestaurantQuery query);
 }
