@@ -1,0 +1,15 @@
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\AddisEats.Exercises.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\AddisEats.Exercises.AssemblyInfoInputs.cache
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\AddisEats.Exercises.AssemblyInfo.cs
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\AddisEats.Exercises.csproj.CoreCompileInputs.cache
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\AddisEats.Exercises.sourcelink.json
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\bin\Debug\net8.0\AddisEats.Exercises.exe
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\bin\Debug\net8.0\AddisEats.Exercises.deps.json
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\bin\Debug\net8.0\AddisEats.Exercises.runtimeconfig.json
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\bin\Debug\net8.0\AddisEats.Exercises.dll
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\bin\Debug\net8.0\AddisEats.Exercises.pdb
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\AddisEats.Exercises.dll
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\refint\AddisEats.Exercises.dll
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\AddisEats.Exercises.pdb
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\AddisEats.Exercises.genruntimeconfig.cache
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\Exercises\AddisEats.Exercises\obj\Debug\net8.0\ref\AddisEats.Exercises.dll
