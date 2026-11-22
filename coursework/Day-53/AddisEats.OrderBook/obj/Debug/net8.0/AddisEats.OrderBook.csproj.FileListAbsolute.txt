@@ -1,0 +1,15 @@
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\AddisEats.OrderBook.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\AddisEats.OrderBook.AssemblyInfoInputs.cache
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\AddisEats.OrderBook.AssemblyInfo.cs
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\AddisEats.OrderBook.csproj.CoreCompileInputs.cache
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\AddisEats.OrderBook.sourcelink.json
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\bin\Debug\net8.0\AddisEats.OrderBook.exe
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\bin\Debug\net8.0\AddisEats.OrderBook.deps.json
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\bin\Debug\net8.0\AddisEats.OrderBook.runtimeconfig.json
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\bin\Debug\net8.0\AddisEats.OrderBook.dll
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\bin\Debug\net8.0\AddisEats.OrderBook.pdb
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\AddisEats.OrderBook.dll
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\refint\AddisEats.OrderBook.dll
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\AddisEats.OrderBook.pdb
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\AddisEats.OrderBook.genruntimeconfig.cache
+C:\Users\yohan\projects\backend-development-journey\coursework\Day-53\AddisEats.OrderBook\obj\Debug\net8.0\ref\AddisEats.OrderBook.dll
