@@ -10,7 +10,7 @@ public static class OrderMapping
             order.Id,
             order.RestaurantId,
             order.Area,
-            order.Qty,
+            order.Items.Sum(item => item.Qty),
             order.Status
         );
     }

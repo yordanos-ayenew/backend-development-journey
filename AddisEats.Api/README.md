@@ -1,142 +1,66 @@
-# AddisEats API
+## Day 58: Validation and Error Handling
 
-A RESTful Web API built with C# and ASP.NET Core for managing restaurants, menu items, and food orders.
+### Request Validation
 
-## Technologies
-- C#
-- .NET 8
-- ASP.NET Core Web API
-- Swagger
+The API validates incoming requests using:
 
-## Getting Started
+- **Route constraints:** Ensures route IDs are integers.
+- **Data annotations:** Validates required fields, quantities, lengths, and amounts.
+- **Custom validation:** Checks Ethiopian mobile numbers and ETB amounts.
+- **Business validation:** Checks restaurant availability, menu ownership, and order limits.
+- **Cross-field validation:** Scheduled orders must include a delivery date and time.
 
-Clone the repository:
+### Order Pricing
 
-```bash
-git clone YOUR_REPOSITORY_URL
-```
+Order totals are calculated on the server using menu item prices and restaurant delivery fees.
 
-Navigate to the project folder:
+Clients cannot submit their own subtotal, delivery fee, or total.
 
-```bash
-cd AddisEats.Api
-```
+### Error Handling
 
-Run the application:
+The API uses `Result<T>` for expected business failures and global exception middleware for unexpected exceptions.
 
-```bash
-dotnet run
-```
+Error responses include a code and trace ID.
 
-Open the Swagger URL shown in the terminal to test the API.
+### Error Catalogue
 
-## API Endpoints
-
-### Menu Items
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/v1/menu-items` | Get all menu items |
-| GET | `/api/v1/menu-items/{id:int}` | Get a menu item |
-| POST | `/api/v1/menu-items` | Create a menu item |
-
-### Restaurants
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/v1/restaurants` | Get all restaurants |
-| GET | `/api/v1/restaurants/{id:int}` | Get a restaurant |
-| GET | `/api/v1/restaurants/{id:int}/menu` | Get a restaurant's menu |
-
-### Orders
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/v1/orders/{id:int}` | Get an order |
-| POST | `/api/v1/orders` | Create an order |
-| PATCH | `/api/v1/orders/{id:int}/status` | Update order status |
-
-## Query Parameters
-
-The restaurants endpoint supports:
-
-| Parameter | Default | Description |
-|---|---|---|
-| `area` | None | Filter by area |
-| `areas` | Empty | Filter by multiple areas |
-| `maxFeeEtb` | None | Filter by delivery fee |
-| `page` | 1 | Page number |
-| `limit` | 20 | Results per page |
-
-Example:
-
-```http
-GET /api/v1/restaurants?area=Bole&page=1&limit=10
-```
-
-Pagination rules:
-- Default limit: 20
-- Maximum limit: 100
-- Page and limit must be greater than zero.
-- Limits above 100 are capped at 100.
-- Unknown query parameters are ignored.
-
-## Response Formats
-
-### Successful Collection Response
-
-```json
-{
-  "data": [],
-  "page": 1,
-  "pageSize": 20,
-  "total": 12
-}
-```
-
-### Error Response
-
-```json
-{
-  "code": "RESTAURANT_NOT_FOUND",
-  "message": "Restaurant not found."
-}
-```
-
-## Error Catalogue
-
-| Error Code | HTTP Status | Description |
+| Error Code | HTTP Status | Meaning |
 |---|---:|---|
-| `VALIDATION_ERROR` | 400 | Invalid request data |
-| `INVALID_PAGINATION` | 400 | Invalid page or limit |
-| `INVALID_PRICE` | 400 | Invalid menu item price |
-| `RESTAURANT_NOT_FOUND` | 404 | Restaurant not found |
-| `MENU_ITEM_NOT_FOUND` | 404 | Menu item not found |
-| `ORDER_NOT_FOUND` | 404 | Order not found |
-| `DUPLICATE_RESOURCE` | 409 | Resource already exists |
-| `INVALID_ORDER_STATUS` | 400 | Invalid order status |
-| `INTERNAL_SERVER_ERROR` | 500 | Unexpected server error |
+| VALIDATION_FAILED | 400 | Invalid request data |
+| INVALID_PRICE | 400 | Invalid menu item price |
+| RESTAURANT_NOT_FOUND | 404 | Restaurant does not exist |
+| MENU_ITEM_NOT_FOUND | 404 | Menu item does not exist |
+| ORDER_NOT_FOUND | 404 | Order does not exist |
+| RESTAURANT_CLOSED | 409 | Restaurant is unavailable |
+| MAX_OPEN_ORDERS | 409 | Customer has reached the open-order limit |
+| ORDER_STATUS_CONFLICT | 409 | Order status cannot be changed |
+| MENU_ITEM_MISMATCH | 422 | Menu item does not belong to the selected restaurant |
+| INTERNAL_SERVER_ERROR | 500 | Unexpected server error |
 
-## Testing
+Only include codes that your application actually produces.
 
-The API can be tested using:
-- Swagger UI
-- VS Code `.http` files
-- Postman
+### Example Error Response
 
-## Notes
+```json
+{
+  "title": "Restaurant not found.",
+  "status": 404,
+  "code": "RESTAURANT_NOT_FOUND",
+  "traceId": "example-trace-id"
+}
+```
 
-- Data is currently stored in memory.
-- Data resets when the application restarts.
-- API routes use RESTful naming conventions.
-- DTOs are used to control returned data.
-- JSON responses use camelCase.
-- Null values are omitted.
-- Enum values are returned as strings.
+### Testing
 
-## Author
+Tested:
+- Valid order creation
+- Invalid Ethiopian phone number
+- Invalid order quantity
+- Scheduled order without delivery time
+- Nonexistent restaurant
+- Global exception handling
+- Server-side order price calculation
 
-Developed as part of the CodeOps Full Stack Software Development Program.
+### Exception Handling
 
-**Project:** AddisEats API  
-**Track:** .NET (C#) Backend Development
+Unexpected exceptions are logged with their trace IDs. The API returns a generic Problem Details response without exposing stack traces or internal exception messages.

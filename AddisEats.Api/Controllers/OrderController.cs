@@ -2,6 +2,7 @@ using AddisEats.Api.Dtos;
 using AddisEats.Api.Models;
 using AddisEats.Api.Services.OrderServices;
 using Microsoft.AspNetCore.Mvc;
+using AddisEats.Api.Common;
 
 namespace AddisEats.Api.Controllers;
 
@@ -17,22 +18,23 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public ActionResult<OrderDto> GetOne(int id)
+    public IActionResult GetOne(int id)
     {
-        var order = _orderService.GetById(id);
-        if (order is null)
-            return NotFound(new ApiError(
-                "ORDER_NOT_FOUND",
-                $"Order with ID {id} was not found."
-            ));
+        var result = _orderService.GetById(id);
+        if (!result.IsSuccess)
+            return result.ToActionResult(this);
 
-        return order.ToDto();
+        return Ok(result.Value!.ToDto());
     }
 
     [HttpPost]
-    public ActionResult<OrderDto> Create([FromBody] CreateOrderRequest request)
+    public IActionResult Create([FromBody] CreateOrderRequest request)
     {
-        var order = _orderService.Create(request);
+        var result = _orderService.Place(request);
+        if (!result.IsSuccess)
+            return result.ToActionResult(this);
+
+        var order = result.Value!;
 
         return CreatedAtAction(
             nameof(GetOne),
@@ -42,18 +44,14 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPatch("{id:int}/status")]
-    public ActionResult<OrderDto> UpdateStatus(
+    public IActionResult UpdateStatus(
         int id,
-        [FromBody] UpdateOrderStatusRequest request)
+        UpdateOrderStatusRequest request)
     {
-        var order = _orderService.UpdateStatus(id, request.Status);
+        var result = _orderService.UpdateStatus(id, request.Status);
+        if (!result.IsSuccess)
+            return result.ToActionResult(this);
 
-        if (order is null)
-            return NotFound(new ApiError(
-                "ORDER_NOT_FOUND",
-                $"Order with ID {id} was not found."
-            ));
-
-        return order.ToDto();
+        return Ok(result.Value!.ToDto());
     }
 }

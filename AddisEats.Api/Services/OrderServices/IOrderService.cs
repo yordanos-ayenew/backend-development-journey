@@ -1,11 +1,12 @@
 using AddisEats.Api.Models;
 using AddisEats.Api.Dtos;
+using AddisEats.Api.Common;
 
 namespace AddisEats.Api.Services.OrderServices;
 
 public interface IOrderService
 {
-    Order? GetById(int id);
-    Order Create(CreateOrderRequest request);
-    Order? UpdateStatus(int id, OrderStatus status);
+    Result<Order> GetById(int id);
+    Result<Order> Place(CreateOrderRequest request);
+    Result<Order> UpdateStatus(int id, OrderStatus status);
 }
