@@ -3,11 +3,13 @@ using AddisEats.Api.Models;
 using AddisEats.Api.Services.OrderServices;
 using Microsoft.AspNetCore.Mvc;
 using AddisEats.Api.Common;
+using AddisEats.Api.Filters;
 
 namespace AddisEats.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/orders")]
+[ServiceFilter(typeof(AuditActionFilter))]
 public class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;

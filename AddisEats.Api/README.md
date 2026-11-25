@@ -1,66 +1,77 @@
-## Day 58: Validation and Error Handling
+# Day 59: Middleware
 
-### Request Validation
+## Overview
+Implemented custom middleware and an action filter in the Addis Eats API to handle cross-cutting concerns such as request tracking, timing, and API key protection.
 
-The API validates incoming requests using:
+## Features
 
-- **Route constraints:** Ensures route IDs are integers.
-- **Data annotations:** Validates required fields, quantities, lengths, and amounts.
-- **Custom validation:** Checks Ethiopian mobile numbers and ETB amounts.
-- **Business validation:** Checks restaurant availability, menu ownership, and order limits.
-- **Cross-field validation:** Scheduled orders must include a delivery date and time.
+### 1. Correlation ID Middleware
+- Reads the `X-Correlation-Id` request header.
+- Generates a new ID if one is not provided.
+- Sets the ID as the request TraceIdentifier.
+- Returns the ID in the response header.
+- Adds the ID to downstream logging scopes.
 
-### Order Pricing
+### 2. Request Timing Middleware
+- Measures request execution time.
+- Logs HTTP method, path, response status, and duration.
+- Uses Warning level for requests taking more than 1000 ms.
 
-Order totals are calculated on the server using menu item prices and restaurant delivery fees.
+### 3. API Key Middleware
+- Checks the `X-API-Key` request header.
+- Returns 401 Unauthorized when the key is missing or invalid.
+- Protects the `/admin` branch using `app.Map()`.
 
-Clients cannot submit their own subtotal, delivery fee, or total.
+Demo API key: `AddisEatsAdminDemoKey`
 
-### Error Handling
+### 4. Audit Action Filter
+- Logs the controller action being executed.
+- Records the action arguments.
+- Logs the action result status code.
 
-The API uses `Result<T>` for expected business failures and global exception middleware for unexpected exceptions.
+Applied to `OrdersController`.
 
-Error responses include a code and trace ID.
+## Middleware Pipeline
 
-### Error Catalogue
+The pipeline follows this order:
 
-| Error Code | HTTP Status | Meaning |
-|---|---:|---|
-| VALIDATION_FAILED | 400 | Invalid request data |
-| INVALID_PRICE | 400 | Invalid menu item price |
-| RESTAURANT_NOT_FOUND | 404 | Restaurant does not exist |
-| MENU_ITEM_NOT_FOUND | 404 | Menu item does not exist |
-| ORDER_NOT_FOUND | 404 | Order does not exist |
-| RESTAURANT_CLOSED | 409 | Restaurant is unavailable |
-| MAX_OPEN_ORDERS | 409 | Customer has reached the open-order limit |
-| ORDER_STATUS_CONFLICT | 409 | Order status cannot be changed |
-| MENU_ITEM_MISMATCH | 422 | Menu item does not belong to the selected restaurant |
-| INTERNAL_SERVER_ERROR | 500 | Unexpected server error |
+| Order | Component | Purpose |
+|---|---|---|
+| 1 | Exception handling | Handles unexpected exceptions |
+| 2 | Correlation ID | Tracks requests |
+| 3 | Request timing | Measures request duration |
+| 4 | Swagger | API documentation in development |
+| 5 | HTTPS redirection | Redirects HTTP requests |
+| 6 | CORS | Allows frontend requests |
+| 7 | Routing | Matches endpoints |
+| 8 | Rate limiting | Reserved for Day 63 |
+| 9 | Authentication | Reserved for Day 61 |
+| 10 | Authorization | Reserved for Day 62 |
+| 11 | Controllers | Executes API endpoints |
 
-Only include codes that your application actually produces.
+Rate limiting, authentication, and authorization are currently commented out.
 
-### Example Error Response
+## Testing
 
-```json
-{
-  "title": "Restaurant not found.",
-  "status": 404,
-  "code": "RESTAURANT_NOT_FOUND",
-  "traceId": "example-trace-id"
-}
-```
+Tested or intended test cases:
 
-### Testing
+- Request with an existing correlation ID.
+- Request without a correlation ID.
+- Request timing logs.
+- `/admin` without an API key returns 401.
+- `/admin` with a valid API key returns `Admin branch reached.`
+- Order endpoint logs action names and arguments.
 
-Tested:
-- Valid order creation
-- Invalid Ethiopian phone number
-- Invalid order quantity
-- Scheduled order without delivery time
-- Nonexistent restaurant
-- Global exception handling
-- Server-side order price calculation
+## Important Notes
 
-### Exception Handling
+- No scoped services are injected into middleware constructors.
+- Middleware runs in the registered order.
+- The API key is for demonstration purposes only and should not be used as a production security solution.
 
-Unexpected exceptions are logged with their trace IDs. The API returns a generic Problem Details response without exposing stack traces or internal exception messages.
+## Technologies
+- C#
+- ASP.NET Core Web API
+- Custom Middleware
+- MVC Action Filters
+- Dependency Injection
+- Logging

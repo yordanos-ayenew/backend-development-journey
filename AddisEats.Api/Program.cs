@@ -8,6 +8,7 @@ using AddisEats.Api.Services.OrderServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using AddisEats.Api.Middleware;
+using AddisEats.Api.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,9 +62,15 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddScoped<AuditActionFilter>();
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseMiddleware<CorrelationIdMiddleware>();
+
+app.UseMiddleware<RequestTimingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -74,9 +81,22 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.UseCors("frontend");
+
+// app.UseRateLimiter();
+
+// app.UseAuthentication();
+
+// app.UseAuthorization();
+
+app.Map("/admin", admin =>
+{
+    admin.UseMiddleware<ApiKeyMiddleware>();
+    admin.Run(async context =>
+    {
+        await context.Response.WriteAsync("Admin branch reached.");
+    });
+});
 
 app.MapControllers();
 
